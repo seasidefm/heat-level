@@ -1,2 +1,4 @@
 venv
 heat.txt
+.env
+kubernetes/heat-level/secret.yml

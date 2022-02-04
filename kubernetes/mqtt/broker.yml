@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: seasidefm
+  name: mosquitto-config
+data:
+  config: |
+    listener 1883 0.0.0.0
+    allow_anonymous true
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: seasidefm
+  name: mosquitto
+  labels:
+    app: mosquitto
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mosquitto
+  template:
+    metadata:
+      labels:
+        app: mosquitto
+    spec:
+      containers:
+        - name: mosquitto
+          image: eclipse-mosquitto
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: tcp
+              containerPort: 1883
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /mosquitto/config/mosquitto.conf
+              subPath: config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: mosquitto-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: seasidefm
+  name: mosquitto-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: mosquitto
+  ports:
+    - name: mqtt
+      nodePort: 30000
+      port: 5555
+      targetPort: 1883
+---
+#apiVersion: traefik.containo.us/v1alpha1
+#kind: IngressRouteTCP
+#metadata:
+#  namespace: seasidefm
+#  name: mqtt-router
+#spec:
+#  entryPoints:
+#  - mqtt
+#  routes:
+#  - kind: Rule
+#    match: HostSNI(`*`)
+#    services:
+#    - name: mosquitto-service
+#      port: 5555
+#---
