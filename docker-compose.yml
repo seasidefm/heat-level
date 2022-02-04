@@ -1,0 +1,19 @@
+version: '3'
+services:
+  heat-level-checker:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    volumes:
+      - .:/app
+    depends_on:
+      - mosquitto
+    links:
+      - mosquitto:mosquitto
+    env_file:
+      - .env
+  mosquitto:
+    image: trafex/alpine-mosquitto
+    ports:
+      - "1883:1883"
+    restart: unless-stopped

@@ -1,0 +1,5 @@
+rq
+redis
+paho-mqtt
+PyMongo
+dnspython

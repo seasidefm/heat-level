@@ -1,0 +1,4 @@
+{
+  "mqtt_broker": "localhost",
+  "heat_file": "./heat.txt"
+}
