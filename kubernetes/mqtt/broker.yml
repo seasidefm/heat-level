@@ -41,7 +41,6 @@ spec:
         - name: config-volume
           configMap:
             name: mosquitto-config
-
 ---
 apiVersion: v1
 kind: Service
@@ -54,7 +53,6 @@ spec:
     app: mosquitto
   ports:
     - name: mqtt
-      nodePort: 30000
       port: 5555
       targetPort: 1883
 ---

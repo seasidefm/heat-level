@@ -87,7 +87,7 @@ def on_message(_, userdata, msg):
 client = get_mqtt_client(topics['NEW_HEAT'])
 
 
-client.connect("mosquitto", 1883, 60)
+client.connect("mosquitto", 5555, 60)
 
 client.on_message = on_message
 
