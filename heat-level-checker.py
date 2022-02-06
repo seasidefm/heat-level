@@ -77,11 +77,10 @@ def on_message(_, userdata, msg):
     # list()    -> array of one doc
     # [0]       -> extract doc
     # ['songs'] -> pull out array of songs
-    list_results = list(result)
+    list_results = list(result)[0]['songs']
 
     if len(list_results) > 0:
-        faves = list_results[0]['songs']
-        matched = list(filter(match_song, faves))[0]
+        matched = list(filter(match_song, list_results))[0]
         client.publish(topics['UPDATE_HEAT'], json.dumps(matched))
     else:
         print('Received empty list, assuming new song and setting heat to zero.')

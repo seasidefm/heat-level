@@ -13,7 +13,9 @@ services:
     env_file:
       - .env
   mosquitto:
-    image: trafex/alpine-mosquitto
+    image: eclipse-mosquitto
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf
     ports:
-      - "1883:1883"
+      - "5555:1883"
     restart: unless-stopped
