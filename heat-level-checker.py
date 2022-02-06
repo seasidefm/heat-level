@@ -77,11 +77,17 @@ def on_message(_, userdata, msg):
     # list()    -> array of one doc
     # [0]       -> extract doc
     # ['songs'] -> pull out array of songs
-    faves = list(result)[0]['songs']
+    list_results = list(result)
 
-    matched = list(filter(match_song, faves))[0]
-
-    client.publish(topics['UPDATE_HEAT'], json.dumps(matched))
+    if len(list_results) > 0:
+        faves = list_results[0]['songs']
+        matched = list(filter(match_song, faves))[0]
+        client.publish(topics['UPDATE_HEAT'], json.dumps(matched))
+    else:
+        print('Received empty list, assuming new song and setting heat to zero.')
+        client.publish(topics['UPDATE_HEAT'], json.dumps({
+            "faveCount": 0
+        }))
 
 
 client = get_mqtt_client(topics['NEW_HEAT'])
