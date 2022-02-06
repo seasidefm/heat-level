@@ -10,7 +10,7 @@ print("Starting heat level checker")
 
 def on_message(_, userdata, msg):
     new_heat = msg.payload.decode('utf-8').strip()
-    print("🔥Received heat level req for: \n", new_heat)
+    print("🔥 Received heat level req for: \n->", new_heat)
 
     mongo = MongoClient(os.environ['MONGO_URL'])
     result = mongo['devDb']['saved_songs'].aggregate([
@@ -79,14 +79,19 @@ def on_message(_, userdata, msg):
     # ['songs'] -> pull out array of songs
     list_results = list(result)[0]['songs']
 
-    if len(list_results) > 0:
-        matched = list(filter(match_song, list_results))[0]
-        client.publish(topics['UPDATE_HEAT'], json.dumps(matched))
-    else:
-        print('Received empty list, assuming new song and setting heat to zero.')
-        client.publish(topics['UPDATE_HEAT'], json.dumps({
+    default_heat = {
+            "name": new_heat,
             "faveCount": 0
-        }))
+        }
+
+    filtered = list(filter(match_song, list_results))
+    match = filtered[0] if len(filtered) > 0 else default_heat
+    client.publish(topics['UPDATE_HEAT'], json.dumps(match))
+
+    if len(filtered) > 0:
+        print('🔥 Updated heat')
+    else:
+        print('🔥 Sent data for new heat')
 
 
 client = get_mqtt_client(topics['NEW_HEAT'])
