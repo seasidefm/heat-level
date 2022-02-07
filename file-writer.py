@@ -13,14 +13,14 @@ def on_message(_, __, msg):
     heat_level = payload['faveCount']
     print(f"🔥 Received new heat level {heat_level}")
 
-    f = open(config['heat_file'], 'w')
+    f = open(config['heat_file'], encoding='utf-8', mode='w')
     if heat_level == 0:
-        f.write(f"🔥HEAT LEVEL RISING")
+        f.write(f"🔥 HEAT LEVEL RISING")
     else:
-        f.write(f"🔥HEAT LEVEL: {heat_level}")
+        f.write(f"🔥 HEAT LEVEL: {heat_level}")
 
     f.close()
-    print("🔥Heat level set")
+    print("🔥 Heat level set")
 
 
 client = get_mqtt_client(topics["UPDATE_HEAT"])
