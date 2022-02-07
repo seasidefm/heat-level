@@ -5,13 +5,13 @@ config_json = open('config.json', 'r')
 config = json.loads(config_json.read())
 config_json.close()
 
-print("Starting file-writer worker")
+print("🔥 Starting heat level file script")
 
 
 def on_message(_, __, msg):
     payload = json.loads(msg.payload)
     heat_level = payload['faveCount']
-    print(f"🔥Received new heat level {heat_level}")
+    print(f"🔥 Received new heat level {heat_level}")
 
     f = open(config['heat_file'], 'w')
     if heat_level == 0:
@@ -25,7 +25,10 @@ def on_message(_, __, msg):
 
 client = get_mqtt_client(topics["UPDATE_HEAT"])
 
-client.connect(config["mqtt_broker"], 1883, 60)
+client.connect(config["mqtt_broker"], 5555, 60)
 client.on_message = on_message
+
+print("🔥 Client configured and connected")
+print("🔥 Starting topic subscription loop...")
 
 client.loop_forever()

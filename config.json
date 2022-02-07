@@ -1,4 +1,4 @@
 {
-  "mqtt_broker": "localhost",
+  "mqtt_broker": "10.0.20.3",
   "heat_file": "./heat.txt"
 }
